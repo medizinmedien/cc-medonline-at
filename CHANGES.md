@@ -1,5 +1,10 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+#### Version 0.4 // 19.09.2014
+
+* Track clicks on Zozo Tabs in Clicky.
+
+
 #### Version 0.3 // 11.09.2014
 
 * Ausnahmeseiten für Groove werden jetzt im Plugin "Members Public Pages" festgelegt.

@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name:       Custom Code for medonline.at
-Plugin URI:        http://medonline.at
+Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.3
+Version:           0.4
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -54,4 +54,31 @@ function cc_medonline_set_jnews_css_url_to_https() {
 }
 if( $_SERVER['SERVER_PORT'] == 443 && class_exists( 'jNewsticker_Bootstrap' ) )
 	add_action( 'wp_enqueue_scripts', 'cc_medonline_set_jnews_css_url_to_https' );
+
+/**
+ * Track clicks on Zozo Tabs in Clicky.
+ *
+ * The link param for "clicky.log" is composed from titles and can be whatever
+   - but it is the distinguishing mark for Clicky.
+ */
+function cc_medonline_track_clicky_clicks_on_zozo_tabs(){
+	?>
+	<script type="text/javascript">jQuery(document).ready(function($){
+		if( $('li a').hasClass('z-link') ) {
+			$('li a').bind( 'click', function() { 
+				var title = this.innerHTML;
+				var pos = title.indexOf('<span>');
+				title = (pos > 0)?title.substr(0, title.indexOf('<span>')):title;
+				var link = '#tab_' + title.replace(/\s/g, '-').toLowerCase();
+				clicky.log( link, title );<?php
+				print "\n"; 
+				?>
+			});
+		}
+	});</script>
+	<?php
+}
+if ( $_SERVER['PRODUCTION'] )
+	add_action(  'wp_footer', 'cc_medonline_track_clicky_clicks_on_zozo_tabs', 200 );
+
 
