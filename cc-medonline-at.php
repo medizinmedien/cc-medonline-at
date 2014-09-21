@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.4
+Version:           0.5
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -58,27 +58,58 @@ if( $_SERVER['SERVER_PORT'] == 443 && class_exists( 'jNewsticker_Bootstrap' ) )
 /**
  * Track clicks on Zozo Tabs in Clicky.
  *
- * The link param for "clicky.log" is composed from titles and can be whatever
-   - but it is the distinguishing mark for Clicky.
+ * The 1st param for clicky.log() is composed from titles here and has not to be a
+ * real link - it has to be a link because it's the distinguishing mark for Clicky.
+ *
+ * see: https://clicky.com/help/custom/manual#log
  */
 function cc_medonline_track_clicky_clicks_on_zozo_tabs(){
 	?>
 	<script type="text/javascript">jQuery(document).ready(function($){
-		if( $('li a').hasClass('z-link') ) {
-			$('li a').bind( 'click', function() { 
+		if( $('li a').hasClass('z-link') ) { <?php /* Zozo link? */ ?>
+			$('li a').bind( 'click', function() {
 				var title = this.innerHTML;
-				var pos = title.indexOf('<span>');
-				title = (pos > 0)?title.substr(0, title.indexOf('<span>')):title;
+				var length = title.indexOf('<span>');
+				title = (length > 0) ? title.substr(0, length) : title;
 				var link = '#tab_' + title.replace(/\s/g, '-').toLowerCase();
-				clicky.log( link, title );<?php
-				print "\n"; 
-				?>
+				var page  = '<?php print esc_url( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ); ?>';
+				clicky.log( link, title + ' (auf Seite ' + page + ')' );
 			});
 		}
 	});</script>
 	<?php
 }
 if ( $_SERVER['PRODUCTION'] )
-	add_action(  'wp_footer', 'cc_medonline_track_clicky_clicks_on_zozo_tabs', 200 );
+	add_action( 'wp_footer', 'cc_medonline_track_clicky_clicks_on_zozo_tabs', 200 );
+
+/**
+ * Track clicks on post tags in Clicky.
+ *
+ * see: https://clicky.com/help/custom/manual#log
+ */
+function cc_medonline_clicky_track_tags( $term_links ) {
+	if( ! $term_links )
+		return $term_links;
+
+	global $post;
+	$clickyfied_links = array();
+
+	foreach( $term_links as $term_link ) {
+		$link  = preg_replace( '|<a.*href="(.*?)".*>|', '$1', $term_link );
+		$page  = esc_url( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+		if( strpos( $page, 'admin-ajax.php' ) && isset( $_SERVER['HTTP_REFERER'] ) )
+			$page = esc_url( $_SERVER['HTTP_REFERER'] );
+		$title = esc_html( $post->post_title );
+		$clickyfied_links[] = str_replace(
+			' href=',
+			" onclick=\"clicky.log( '$link', 'Schlagwort des Beitrags: \'$title\' (auf Seite: $page)' );\" href=",
+			$term_link
+		);
+	}
+
+	return $clickyfied_links;
+}
+if ( $_SERVER['PRODUCTION'] )
+	add_filter( 'term_links-post_tag', 'cc_medonline_clicky_track_tags' );
 
 

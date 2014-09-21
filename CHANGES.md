@@ -1,5 +1,11 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+#### Version 0.5 // 20.09.2014
+
+* Herkunftsseite des Tab-Klicks im Clicky-Log hinzugefügt.
+* Auch Klicks auf Schlagwort-Links als Clicky-Events verfolgen, inkl. Herkunftsseite des Klicks.
+
+
 #### Version 0.4 // 19.09.2014
 
 * Track clicks on Zozo Tabs in Clicky.
