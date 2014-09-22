@@ -1,5 +1,10 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+#### Version 0.6 // 22.09.2014
+
+* Bugfix: alle Links wurden getrackt, anstatt nur die Zozo-Links.
+
+
 #### Version 0.5 // 20.09.2014
 
 * Herkunftsseite des Tab-Klicks im Clicky-Log hinzugefügt.

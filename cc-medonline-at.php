@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.5
+Version:           0.6
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -66,16 +66,14 @@ if( $_SERVER['SERVER_PORT'] == 443 && class_exists( 'jNewsticker_Bootstrap' ) )
 function cc_medonline_track_clicky_clicks_on_zozo_tabs(){
 	?>
 	<script type="text/javascript">jQuery(document).ready(function($){
-		if( $('li a').hasClass('z-link') ) { <?php /* Zozo link? */ ?>
-			$('li a').bind( 'click', function() {
-				var title = this.innerHTML;
-				var length = title.indexOf('<span>');
-				title = (length > 0) ? title.substr(0, length) : title;
-				var link = '#tab_' + title.replace(/\s/g, '-').toLowerCase();
-				var page  = '<?php print esc_url( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ); ?>';
-				clicky.log( link, title + ' (auf Seite ' + page + ')' );
-			});
-		}
+		$('li a.z-link').bind( 'click', function() {
+			var title = this.innerHTML;
+			var length = title.indexOf('<span>');
+			title = (length > 0) ? title.substr(0, length) : title;
+			var link = '#tab_' + title.replace(/\s/g, '-').toLowerCase();
+			var page  = '<?php print esc_url( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ); ?>';
+			clicky.log( link, title + ' (auf Seite ' + page + ')' );
+		});
 	});</script>
 	<?php
 }
