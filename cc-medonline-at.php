@@ -111,3 +111,29 @@ if ( $_SERVER['PRODUCTION'] )
 	add_filter( 'term_links-post_tag', 'cc_medonline_clicky_track_tags' );
 
 
+/**
+ * Estimate time required to read the article.
+ *
+ * Inspired by: http://wptavern.com/estimated-time-to-read-this-post-eternity
+ *
+ * @return bool false ($estimated_time < 1 min) || string $estimated_time
+ */
+function cc_medonline_print_estimated_reading_time( $post_content = '' ) {
+	$post  = get_post();
+
+	$speed = 250; // words per minute
+	$out   = '';
+
+	$words = str_word_count( strip_tags( $post->post_content ) );
+	$minutes = floor( $words / $speed );
+
+	if ( 1 < $minutes ) {
+		$estimated_time = $minutes . ' min';
+		$out = '<span id="est-read-time" class="fa fa-clock-o fa-lg" title="Lesezeit"><span>' . $estimated_time . '</span></span>' . $post_content;
+	}
+
+	print $out;
+}
+
+
+
