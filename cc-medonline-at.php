@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.6
+Version:           0.7
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -136,4 +136,63 @@ function cc_medonline_print_estimated_reading_time( $post_content = '' ) {
 }
 
 
+/**
+ * Add modified output of plugin Thumbs Rating just before post content.
+ */
+function cc_medonline_insert_thumbs_rating_before_post_content( $content ) {
+	if( function_exists( 'thumbs_rating_getlink' )
+		&& is_user_logged_in()
+		&& ( is_single() || ( defined('DOING_AJAX') && DOING_AJAX ) )
+	) {
+
+		$thumbs = thumbs_rating_getlink( get_the_ID() );
+		$thumbs = cc_medonline_replacements_for_thumbs_rating_output( $thumbs );
+		return $thumbs . $content;
+	}
+	else
+		return $content;
+}
+add_filter( 'the_content', 'cc_medonline_insert_thumbs_rating_before_post_content' );
+
+/**
+ * Modify output of the Thumbs Rating plugin. Also used to modify AJAX callback output.
+ */
+function cc_medonline_replacements_for_thumbs_rating_output( $thumbs ) {
+	$thumbs = str_replace(
+		array(
+			'thumbs-rating-up',
+			'thumbs-rating-down',
+			'data-text="Vote',
+			'Du hast',
+			'Vote Up +',
+			'Vote Down -'
+		),
+		array(
+			'thumbs-rating-up fa fa-thumbs-o-up fa-lg',
+			'thumbs-rating-down fa fa-thumbs-o-down fa-lg',
+			'title="Vote',
+			'Sie haben',
+			'Gef&auml;llt mir',
+			'Missf&auml;llt mir'
+		),
+		$thumbs
+	);
+	return $thumbs;
+}
+// Prevent loading German translations of plugin Thumbs Rating (even if not existing yet):
+remove_action('plugins_loaded', 'thumbs_rating_init');
+
+/**
+ * Load Font Awesome into header. Used to modify Thumbs Rating output.
+ */
+function cc_medonline_load_font_awesome() {
+	wp_register_style( 'cc_medonline_font_awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css' );
+	wp_enqueue_style('cc_medonline_font_awesome');
+}
+
+function cc_medonline_load_font_awesome_for_single_articles() {
+	if( is_single() )
+		cc_medonline_load_font_awesome();
+}
+add_action( 'template_redirect', 'cc_medonline_load_font_awesome_for_single_articles' );
 

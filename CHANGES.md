@@ -1,5 +1,11 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+#### Version 0.7 // 29.09.2014
+
+* Provide a theme template function which shows estimated reading times of articles.
+* Add modified output of plugin Thumbs Rating to content. Embed Font Awesome for this.
+
+
 #### Version 0.6 // 22.09.2014
 
 * Bugfix: alle Links wurden getrackt, anstatt nur die Zozo-Links.
