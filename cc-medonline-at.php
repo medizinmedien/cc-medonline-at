@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.7
+Version:           0.8
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -190,9 +190,9 @@ function cc_medonline_load_font_awesome() {
 	wp_enqueue_style('cc_medonline_font_awesome');
 }
 
-function cc_medonline_load_font_awesome_for_single_articles() {
-	if( is_single() )
+function cc_medonline_load_font_awesome_when_is_singular() {
+	if( is_singular() )
 		cc_medonline_load_font_awesome();
 }
-add_action( 'template_redirect', 'cc_medonline_load_font_awesome_for_single_articles' );
+add_action( 'template_redirect', 'cc_medonline_load_font_awesome_when_is_singular' );
 

@@ -1,5 +1,10 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+#### Version 0.8 // 01.10.2014
+
+* Laden von Font Awesome (für Thumbs Rating) auch auf pages.
+
+
 #### Version 0.7 // 29.09.2014
 
 * Provide a theme template function which shows estimated reading times of articles.
