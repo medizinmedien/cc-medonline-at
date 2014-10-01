@@ -2,8 +2,9 @@
 
 #### Version 0.8 // 01.10.2014
 
+* Bestimmte Seiten (z.B. public pages) von der Anzeige der Thums Ratings ausnehmen (dzt. hard-coded).
+* Thumbs Ratings auch auf Seiten (pages) anzeigen.
 * Laden von Font Awesome (für Thumbs Rating) auch auf pages.
-
 
 #### Version 0.7 // 29.09.2014
 

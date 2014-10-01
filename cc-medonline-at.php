@@ -140,10 +140,7 @@ function cc_medonline_print_estimated_reading_time( $post_content = '' ) {
  * Add modified output of plugin Thumbs Rating just before post content.
  */
 function cc_medonline_insert_thumbs_rating_before_post_content( $content ) {
-	if( function_exists( 'thumbs_rating_getlink' )
-		&& is_user_logged_in()
-		&& ( is_single() || ( defined('DOING_AJAX') && DOING_AJAX ) )
-	) {
+	if( function_exists( 'thumbs_rating_getlink' )  && is_user_logged_in()  && is_singular() && ! is_front_page() ) {
 
 		$thumbs = thumbs_rating_getlink( get_the_ID() );
 		$thumbs = cc_medonline_replacements_for_thumbs_rating_output( $thumbs );
@@ -153,6 +150,19 @@ function cc_medonline_insert_thumbs_rating_before_post_content( $content ) {
 		return $content;
 }
 add_filter( 'the_content', 'cc_medonline_insert_thumbs_rating_before_post_content' );
+
+/**
+ * Exclude certain pages from Thumbs Rating.
+ */
+function cc_medonline_exclude_pages_from_thumbs_rating() {
+	if( is_page( array( 'impressum', 'ueber', 'join' ) )
+	||  ! function_exists( 'is_medonline_public_page' ) // Fallback: display no ratings.
+	||  is_medonline_public_page() 
+	){
+		remove_filter( 'the_content', 'cc_medonline_insert_thumbs_rating_before_post_content' );
+	}
+}
+add_filter( 'template_redirect', 'cc_medonline_exclude_pages_from_thumbs_rating' );
 
 /**
  * Modify output of the Thumbs Rating plugin. Also used to modify AJAX callback output.
