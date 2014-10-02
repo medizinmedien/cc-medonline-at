@@ -140,7 +140,11 @@ function cc_medonline_print_estimated_reading_time( $post_content = '' ) {
  * Add modified output of plugin Thumbs Rating just before post content.
  */
 function cc_medonline_insert_thumbs_rating_before_post_content( $content ) {
-	if( function_exists( 'thumbs_rating_getlink' )  && is_user_logged_in()  && is_singular() && ! is_front_page() ) {
+	global $post;
+	if( function_exists( 'thumbs_rating_getlink' )
+		&& is_user_logged_in()  && is_singular() && ! is_front_page()
+		&& empty( get_metadata( 'post', $post->ID, 'wpe_feed', true ) ) // WP Ematico
+	) {
 
 		$thumbs = thumbs_rating_getlink( get_the_ID() );
 		$thumbs = cc_medonline_replacements_for_thumbs_rating_output( $thumbs );
@@ -155,9 +159,11 @@ add_filter( 'the_content', 'cc_medonline_insert_thumbs_rating_before_post_conten
  * Exclude certain pages from Thumbs Rating.
  */
 function cc_medonline_exclude_pages_from_thumbs_rating() {
+	global $post;
 	if( is_page( array( 'impressum', 'ueber', 'join' ) )
 	||  ! function_exists( 'is_medonline_public_page' ) // Fallback: display no ratings.
-	||  is_medonline_public_page() 
+	||  is_medonline_public_page()
+	||  ! empty( get_metadata( 'post', $post->ID, 'wpe_feed', true ) ) // WP Ematico
 	){
 		remove_filter( 'the_content', 'cc_medonline_insert_thumbs_rating_before_post_content' );
 	}
