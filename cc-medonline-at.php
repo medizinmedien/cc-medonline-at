@@ -141,11 +141,7 @@ function cc_medonline_print_estimated_reading_time( $post_content = '' ) {
  */
 function cc_medonline_insert_thumbs_rating_before_post_content( $content ) {
 	global $post;
-	if( function_exists( 'thumbs_rating_getlink' )
-		&& is_user_logged_in()  && is_singular() && ! is_front_page()
-		&& empty( get_metadata( 'post', $post->ID, 'wpe_feed', true ) ) // WP Ematico
-	) {
-
+	if( is_user_logged_in() && ! cc_medonline_thumbs_rating_is_undesired() ) {
 		$thumbs = thumbs_rating_getlink( get_the_ID() );
 		$thumbs = cc_medonline_replacements_for_thumbs_rating_output( $thumbs );
 		return $thumbs . $content;
@@ -156,22 +152,27 @@ function cc_medonline_insert_thumbs_rating_before_post_content( $content ) {
 add_filter( 'the_content', 'cc_medonline_insert_thumbs_rating_before_post_content' );
 
 /**
- * Exclude certain pages from Thumbs Rating.
+ * Return TRUE when Thumbs Ratings are undesired.
  */
-function cc_medonline_exclude_pages_from_thumbs_rating() {
+function cc_medonline_thumbs_rating_is_undesired() {
 	global $post;
 	if( is_page( array( 'impressum', 'ueber', 'join' ) )
+	||  is_front_page()
 	||  ! function_exists( 'is_medonline_public_page' ) // Fallback: display no ratings.
+	||  ! function_exists( 'thumbs_rating_getlink' )
 	||  is_medonline_public_page()
+	||  ! is_singular()
 	||  ( in_category( 'pubmed' ) || post_is_in_descendant_category( 295 ) )
 	||  ( in_category( 'jobs'   ) || post_is_in_descendant_category( 294 ) )
 	||  ( in_category( 'feeds'  ) || post_is_in_descendant_category( 286 ) )
 	||  ! empty( get_metadata( 'post', $post->ID, 'wpe_feed', true ) ) // WP Ematico
 	){
-		remove_filter( 'the_content', 'cc_medonline_insert_thumbs_rating_before_post_content' );
+		return true;
+	}
+	else {
+		return false;
 	}
 }
-add_filter( 'template_redirect', 'cc_medonline_exclude_pages_from_thumbs_rating' );
 
 /**
  * Determine if any of a post's assigned categories are descendants of target categories.
@@ -214,6 +215,7 @@ function cc_medonline_replacements_for_thumbs_rating_output( $thumbs ) {
 	);
 	return $thumbs;
 }
+
 // Prevent loading German translations of plugin Thumbs Rating (even if not existing yet):
 remove_action('plugins_loaded', 'thumbs_rating_init');
 
@@ -225,9 +227,9 @@ function cc_medonline_load_font_awesome() {
 	wp_enqueue_style('cc_medonline_font_awesome');
 }
 
-function cc_medonline_load_font_awesome_when_is_singular() {
-	if( is_singular() )
+function cc_medonline_load_font_awesome_with_thumbs_rating() {
+	if( ! cc_medonline_thumbs_rating_is_undesired() )
 		cc_medonline_load_font_awesome();
 }
-add_action( 'template_redirect', 'cc_medonline_load_font_awesome_when_is_singular' );
+add_action( 'template_redirect', 'cc_medonline_load_font_awesome_with_thumbs_rating' );
 
