@@ -1,5 +1,10 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+#### Version 0.9 // 28.10.2014
+
+* Weitere Ausnahmen für die Anzeige von Thumbs Rating bei bestimmten Kategorien: keine Anzeige bei "Feeds", "Jobs" und "pubmed", sowie deren Unter-Kategorien.
+
+
 #### Version 0.8 // 01.10.2014
 
 * Bestimmte Seiten (z.B. public pages) von der Anzeige der Thums Ratings ausnehmen (dzt. hard-coded).

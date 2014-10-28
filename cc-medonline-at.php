@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.8
+Version:           0.9
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -163,12 +163,31 @@ function cc_medonline_exclude_pages_from_thumbs_rating() {
 	if( is_page( array( 'impressum', 'ueber', 'join' ) )
 	||  ! function_exists( 'is_medonline_public_page' ) // Fallback: display no ratings.
 	||  is_medonline_public_page()
+	||  ( in_category( 'pubmed' ) || post_is_in_descendant_category( 295 ) )
+	||  ( in_category( 'jobs'   ) || post_is_in_descendant_category( 294 ) )
+	||  ( in_category( 'feeds'  ) || post_is_in_descendant_category( 286 ) )
 	||  ! empty( get_metadata( 'post', $post->ID, 'wpe_feed', true ) ) // WP Ematico
 	){
 		remove_filter( 'the_content', 'cc_medonline_insert_thumbs_rating_before_post_content' );
 	}
 }
 add_filter( 'template_redirect', 'cc_medonline_exclude_pages_from_thumbs_rating' );
+
+/**
+ * Determine if any of a post's assigned categories are descendants of target categories.
+ * see: http://codex.wordpress.org/Function_Reference/in_category#Testing_if_a_post_is_in_a_descendant_category
+ */
+if ( ! function_exists( 'post_is_in_descendant_category' ) ) {
+	function post_is_in_descendant_category( $cats, $_post = null ) {
+		foreach ( (array) $cats as $cat ) {
+			// get_term_children() accepts integer ID only
+			$descendants = get_term_children( (int) $cat, 'category' );
+			if ( $descendants && in_category( $descendants, $_post ) )
+				return true;
+		}
+		return false;
+	}
+}
 
 /**
  * Modify output of the Thumbs Rating plugin. Also used to modify AJAX callback output.
