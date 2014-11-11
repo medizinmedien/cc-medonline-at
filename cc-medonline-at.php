@@ -37,6 +37,7 @@ function cc_medonline_add_groove() {
 add_action(  'wp_footer', 'cc_medonline_add_groove' );
 add_action( 'login_head', 'cc_medonline_add_groove' );
 
+
 /**
  * Make a https link for jnewsticker CSS in header of the WP signup page.
  *
@@ -46,14 +47,21 @@ add_action( 'login_head', 'cc_medonline_add_groove' );
  * certificate warnings.
  */
 function cc_medonline_set_jnews_css_url_to_https() {
+	if ( ! class_exists( 'jNewsticker_Bootstrap' ) )
+		return;
 	wp_dequeue_style( 'jnewsticker_css' );
 	$jnews_settings = get_option('jnewsticker');
-	$jnews_css = str_replace( 'http://', 'https://', $jnews_settings['skin'] );
+	if( $_SERVER['SERVER_PORT'] == 443 || is_ssl() ) {
+		$jnews_css = str_replace( 'http://', 'https://', $jnews_settings['skin'] );
+	}
+	else {
+		$jnews_css = $jnews_settings['skin'];
+	}
 	wp_register_style( 'cc_medonline_jnewsticker_css_to_https', $jnews_css );
 	wp_enqueue_style('cc_medonline_jnewsticker_css_to_https');
 }
-if( $_SERVER['SERVER_PORT'] == 443 && class_exists( 'jNewsticker_Bootstrap' ) )
-	add_action( 'wp_enqueue_scripts', 'cc_medonline_set_jnews_css_url_to_https' );
+add_action( 'wp_enqueue_scripts', 'cc_medonline_set_jnews_css_url_to_https', 15 );
+
 
 /**
  * Track clicks on Zozo Tabs in Clicky.
