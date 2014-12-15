@@ -241,3 +241,47 @@ function cc_medonline_load_font_awesome_with_thumbs_rating() {
 }
 add_action( 'template_redirect', 'cc_medonline_load_font_awesome_with_thumbs_rating' );
 
+
+/**
+ * Additional menu profile link for bbPress after login.
+ */
+function cc_medonline_members_nav( $items, $menu, $args ) {
+	global $current_user;
+
+	$user = $current_user->data->user_login;
+	$user_profile_url = esc_url( home_url() . "/foren/nutzer/$user" );
+	$profile_index = cc_medonline_array_index_of( 'Mein Profil', $items );
+
+	if ( is_user_logged_in() ) {
+		if ( $profile_index ) {
+			// Replace custom menu URL
+			$items[$profile_index]->url = $user_profile_url;
+		}
+	} else {
+		// User is not logged in.
+		if ( $profile_index ) {
+			unset( $items[$profile_index] );
+		}
+	}
+	return $items;
+}
+add_filter( 'wp_get_nav_menu_items', 'cc_medonline_members_nav', 10, 3 );
+
+
+/**
+ * Get index number of an menu item from a menu item's title.
+ *
+ * @return integer Index of array with menu item objects | FALSE if not found.
+ */
+function cc_medonline_array_index_of( $menu_title, $array ) {
+	if ( strlen( $menu_title ) && is_array( $array ) && count( $array ) ) {
+		for( $i = count( $array ) - 1; $i >= 0; $i-- ) {
+			if ( is_object( $array[$i] ) && property_exists( $array[$i], 'title' ) && $array[$i]->title == $menu_title ) {
+				return $i;
+			}
+		}
+	}
+	return false;
+}
+
+
