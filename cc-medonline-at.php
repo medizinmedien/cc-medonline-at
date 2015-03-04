@@ -248,7 +248,7 @@ add_action( 'template_redirect', 'cc_medonline_load_font_awesome_with_thumbs_rat
 function cc_medonline_members_nav( $items, $menu, $args ) {
 	global $current_user;
 
-	$user = $current_user->data->user_login;
+	$user = $current_user->data->user_nicename;
 	$user_profile_url = esc_url( home_url() . "/foren/nutzer/$user" );
 	$profile_index = cc_medonline_array_index_of( 'Mein Profil', $items );
 
