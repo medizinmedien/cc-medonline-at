@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.9
+Version:           0.91
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -283,5 +283,24 @@ function cc_medonline_array_index_of( $menu_title, $array ) {
 	}
 	return false;
 }
+
+
+/**
+ * HTTPS with exceptions.
+ */
+function cc_medonline_force_https_with_exceptions() {
+	if ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] == 443 ) {
+		if ( strpos( $_SERVER['REQUEST_URI'], 'ami-info' ) !== false
+		||   strpos( $_SERVER['REQUEST_URI'], 'biologika-register' ) !== false ) {
+			wp_redirect( 'http://medonline.at' . $_SERVER['REQUEST_URI'] );
+		}
+	} else {
+		if ( strpos( $_SERVER['REQUEST_URI'], 'ami-info' ) === false
+		&&   strpos( $_SERVER['REQUEST_URI'], 'biologika-register' ) === false ) {
+			wp_redirect( 'https://medonline.at' . $_SERVER['REQUEST_URI'] );
+		}
+	}
+}
+add_action( 'template_redirect', 'cc_medonline_force_https_with_exceptions', 5 );
 
 
