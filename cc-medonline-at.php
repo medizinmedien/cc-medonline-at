@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.91
+Version:           0.92
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -49,14 +49,17 @@ add_action( 'login_head', 'cc_medonline_add_groove' );
 function cc_medonline_set_jnews_css_url_to_https() {
 	if ( ! class_exists( 'jNewsticker_Bootstrap' ) )
 		return;
+
 	wp_dequeue_style( 'jnewsticker_css' );
 	$jnews_settings = get_option('jnewsticker');
+
 	if( $_SERVER['SERVER_PORT'] == 443 || is_ssl() ) {
 		$jnews_css = str_replace( 'http://', 'https://', $jnews_settings['skin'] );
-	}
+	} 
 	else {
 		$jnews_css = $jnews_settings['skin'];
 	}
+
 	wp_register_style( 'cc_medonline_jnewsticker_css_to_https', $jnews_css );
 	wp_enqueue_style('cc_medonline_jnewsticker_css_to_https');
 }
@@ -248,6 +251,9 @@ add_action( 'template_redirect', 'cc_medonline_load_font_awesome_with_thumbs_rat
 function cc_medonline_members_nav( $items, $menu, $args ) {
 	global $current_user;
 
+	// DEBUG
+	//error_log( "$items \n" . print_r( $items, 1 ) );
+
 	$user = $current_user->data->user_nicename;
 	$user_profile_url = esc_url( home_url() . "/foren/nutzer/$user" );
 	$profile_index = cc_medonline_array_index_of( 'Mein Profil', $items );
@@ -296,11 +302,44 @@ function cc_medonline_force_https_with_exceptions() {
 		}
 	} else {
 		if ( strpos( $_SERVER['REQUEST_URI'], 'ami-info' ) === false
-		&&   strpos( $_SERVER['REQUEST_URI'], 'biologika-register' ) === false ) {
+		&& strpos( $_SERVER['REQUEST_URI'], 'biologika-register' ) === false ) {
 			wp_redirect( 'https://medonline.at' . $_SERVER['REQUEST_URI'] );
 		}
 	}
 }
 add_action( 'template_redirect', 'cc_medonline_force_https_with_exceptions', 5 );
 
+
+/**
+ * Pics in feed
+ */
+function cc_medonline_featured_image_in_feed( $content ) {
+	global $post;
+	if ( has_post_thumbnail( $post->ID ) ){
+		$output = get_the_post_thumbnail( $post->ID, 'thumbnail', array( 'style' => '' ) );
+		$content = $output . $content;
+	}
+	return $content;
+}
+add_filter('the_excerpt_rss', 'cc_medonline_featured_image_in_feed');
+add_filter('the_content_feed', 'cc_medonline_featured_image_in_feed');
+
+
+/**
+ * Load JS async on homepage ...
+ */
+function defer_parsing_of_js ( $url ) {
+	if ( FALSE === strpos( $url, '.js' ) )
+		return $url;
+
+	if ( strpos( $url, 'jquery.js' ) )
+		return $url;
+
+	// Nur auf der Startseite asynchron laden
+	if( $_SERVER['REQUEST_URI'] == '/' || $_SERVER['REQUEST_URI'][1] == '#' || $_SERVER['REQUEST_URI'][1] == '?' )
+		return "$url' defer='defer";
+	else
+		return $url;
+}
+add_filter( 'clean_url', 'defer_parsing_of_js', 11, 1 );
 
