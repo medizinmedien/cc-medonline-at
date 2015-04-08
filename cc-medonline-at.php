@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.92
+Version:           0.93
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -176,6 +176,7 @@ function cc_medonline_thumbs_rating_is_undesired() {
 	||  ( in_category( 'pubmed' ) || post_is_in_descendant_category( 295 ) )
 	||  ( in_category( 'jobs'   ) || post_is_in_descendant_category( 294 ) )
 	||  ( in_category( 'feeds'  ) || post_is_in_descendant_category( 286 ) )
+	||    in_category( 'quiz'   )
 	||  ! empty( get_metadata( 'post', $post->ID, 'wpe_feed', true ) ) // WP Ematico
 	){
 		return true;
