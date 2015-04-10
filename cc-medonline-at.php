@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.93
+Version:           0.94
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -343,4 +343,25 @@ function defer_parsing_of_js ( $url ) {
 		return $url;
 }
 add_filter( 'clean_url', 'defer_parsing_of_js', 11, 1 );
+
+
+/**
+ * Turn protocol of mO author's URL to https. Saves 1 redirect.
+ */
+function cc_medonline_comment_author_url_to_https( $url, $comment_ID, $comment ) {
+	return str_replace( 'http://medonline.at', 'https://medonline.at', $url );
+}
+add_filter( 'get_comment_author_url', 'cc_medonline_comment_author_url_to_https', 200, 3 );
+
+/**
+ * Turn local avatar URL's to https.
+ *
+ * Caused by WP core: img src is constructed from site_url, which has http defined.
+ * see https://github.com/medizinmedien/allgemein/issues/208
+ */
+function cc_medonline_comment_author_avatar_to_https( $avatar, $id_or_email, $size, $default, $alt ) {
+	return str_replace( 'http://medonline.at', 'https://medonline.at', $avatar );
+}
+add_filter( 'get_avatar', 'cc_medonline_comment_author_avatar_to_https', 20, 5 );
+
 
