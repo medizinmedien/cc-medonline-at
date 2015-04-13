@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.94
+Version:           0.95
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -316,9 +316,17 @@ add_action( 'template_redirect', 'cc_medonline_force_https_with_exceptions', 5 )
  */
 function cc_medonline_featured_image_in_feed( $content ) {
 	global $post;
+	static $aligncounter = 2;
 	if ( has_post_thumbnail( $post->ID ) ){
 		$output = get_the_post_thumbnail( $post->ID, 'thumbnail', array( 'style' => '' ) );
+		$align = ( $aligncounter % 2 ) ? 'valign="left"' : 'valign="right"';
+		$output = str_replace(
+			'<img ',
+			"<img hspace=\"10\" vspace=\"10\" $align ",
+			$output
+		);
 		$content = $output . $content;
+		$aligncounter++;
 	}
 	return $content;
 }
