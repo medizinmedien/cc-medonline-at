@@ -293,25 +293,6 @@ function cc_medonline_array_index_of( $menu_title, $array ) {
 
 
 /**
- * HTTPS with exceptions.
- */
-function cc_medonline_force_https_with_exceptions() {
-	if ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] == 443 ) {
-		if ( strpos( $_SERVER['REQUEST_URI'], 'ami-info' ) !== false
-		||   strpos( $_SERVER['REQUEST_URI'], 'biologika-register' ) !== false ) {
-			wp_redirect( 'http://medonline.at' . $_SERVER['REQUEST_URI'] );
-		}
-	} else {
-		if ( strpos( $_SERVER['REQUEST_URI'], 'ami-info' ) === false
-		&& strpos( $_SERVER['REQUEST_URI'], 'biologika-register' ) === false ) {
-			wp_redirect( 'https://medonline.at' . $_SERVER['REQUEST_URI'] );
-		}
-	}
-}
-add_action( 'template_redirect', 'cc_medonline_force_https_with_exceptions', 5 );
-
-
-/**
  * Pics in feed
  */
 function cc_medonline_featured_image_in_feed( $content ) {
