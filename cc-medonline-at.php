@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.96
+Version:           0.97
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -354,4 +354,23 @@ function cc_medonline_comment_author_avatar_to_https( $avatar, $id_or_email, $si
 }
 add_filter( 'get_avatar', 'cc_medonline_comment_author_avatar_to_https', 20, 5 );
 
+
+/**
+ * Prevent 'display-posts'-shortcode queries from beeing executed unless whistles are fetched by AJAX.
+ *
+ * This reduces massively render time and amount of db queries with ajaxified whistles.
+ */
+function cc_medonline_remove_display_posts_shortcode_from_whistles( $posts ) {
+	foreach( $posts as $post ) {
+		if( $post->post_type == 'whistle') {
+			if( ! empty( get_metadata( 'post', $post->ID, 'ajax-load', true ) ) ) {
+				remove_shortcode( 'display-posts' );
+				//error_log(print_r($post,1));
+				return $posts;
+			}
+		}
+	}
+	return $posts;
+}
+add_action( 'the_posts', 'cc_medonline_remove_display_posts_shortcode_from_whistles' );
 
