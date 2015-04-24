@@ -301,10 +301,10 @@ function cc_medonline_featured_image_in_feed( $content ) {
 	static $aligncounter = 2;
 	if ( has_post_thumbnail( $post->ID ) ){
 		$output = get_the_post_thumbnail( $post->ID, 'thumbnail', array( 'style' => '' ) );
-		$align = ( $aligncounter % 2 ) ? 'valign="left"' : 'valign="right"';
+		$align = ( $aligncounter % 2 ) ? 'align="left"' : 'align="right"';
 		$output = str_replace(
 			'<img ',
-			"<img hspace=\"10\" vspace=\"10\" $align ",
+			"<img hspace=\"0\" vspace=\"0\" $align ",
 			$output
 		);
 		$content = $output . $content;
