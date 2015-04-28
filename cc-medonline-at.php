@@ -304,7 +304,7 @@ function cc_medonline_featured_image_in_feed( $content ) {
 		$align = ( $aligncounter % 2 ) ? 'align="left"' : 'align="right"';
 		$output = str_replace(
 			'<img ',
-			"<img hspace=\"0\" vspace=\"0\" $align ",
+			"<img hspace=\"10\" vspace=\"0\" $align ",
 			$output
 		);
 		$content = $output . $content;
