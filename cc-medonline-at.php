@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           0.98
+Version:           0.99
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -389,3 +389,16 @@ function cc_medonline_enqueue_live_stream() {
 		);
 }
 add_action( 'wp_enqueue_scripts', 'cc_medonline_enqueue_live_stream', 15 );
+
+
+/**
+ * Fix SSL issue with plugin Simple Local Avatars.
+ */
+add_filter( 'simple_local_avatar', function( $avatar ){
+	return str_replace(
+		'http://medonline.at',
+		'https://medonline.at',
+		$avatar 
+	);
+});
+
