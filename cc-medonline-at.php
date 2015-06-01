@@ -85,6 +85,11 @@ function cc_medonline_track_clicky_clicks_on_zozo_tabs(){
 			var page  = '<?php print esc_url( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ); ?>';
 			clicky.log( link, title + ' (auf Seite ' + page + ')' );
 		});
+
+		$('a.yarpp-thumbnail').bind( 'click', function(){
+			var page  = '<?php print esc_url( $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ); ?>';
+			clicky.log( this.href, 'YARPP-click on page ' + page );
+		});
 	});</script>
 	<?php
 }
