@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           1.0
+Version:           1.1
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -262,7 +262,7 @@ function cc_medonline_members_nav( $items, $menu, $args ) {
 	//error_log( "$items \n" . print_r( $items, 1 ) );
 
 	$user = $current_user->data->user_nicename;
-	$user_profile_url = esc_url( home_url() . "/foren/nutzer/$user" );
+	$user_profile_url = esc_url( home_url() . "/user/$user" );
 	$profile_index = cc_medonline_array_index_of( 'Mein Profil', $items );
 
 	if ( is_user_logged_in() ) {
