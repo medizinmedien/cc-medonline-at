@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           1.1
+Version:           1.2
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -382,7 +382,7 @@ add_action( 'the_posts', 'cc_medonline_remove_display_posts_shortcode_from_whist
 
 /**
  * Live stream for a special page.
- */ /*
+ */ /* // Maybe used later again.
 function cc_medonline_enqueue_live_stream() {
 	if( is_page( 'asco' ) )
 		wp_enqueue_script(
@@ -397,13 +397,61 @@ add_action( 'wp_enqueue_scripts', 'cc_medonline_enqueue_live_stream', 15 );
 */
 
 /**
- * Fix SSL issue with plugin Simple Local Avatars.
+ * Replace output of "BBP Profile Information" since Name & E-Mail is not shown
+ * to other users - what we want. Then, "Vorname", "Name", "E-Mail" is hard
+ * translated here, since otherwise we get english output (wrong domain).
  */
-add_filter( 'simple_local_avatar', function( $avatar ){
-	return str_replace(
-		'http://medonline.at',
-		'https://medonline.at',
-		$avatar 
-	);
-});
+remove_action ( 'bbp_template_after_user_profile', 'user_profile_bbp_profile_information' );
+add_action    ( 'bbp_template_after_user_profile', 'cc_medonline_user_profile_bbp_profile_information' );
+function cc_medonline_user_profile_bbp_profile_information() {
+	// This function adds items to the profile display, even if the user
+	// cannot edit other users display first name, lastname and email.
+	global $rpi_options;
+
+	// item 1
+	if ($rpi_options['Activate_item1']== true) {
+		$label1 =  $rpi_options['item1_label'] ;
+		echo "<p>" ;
+		printf ( __( $label1.' : ', 'bbpress' ));
+		echo esc_attr( bbp_get_displayed_user_field( 'rpi_label1' )); 
+		echo"</p>" ;
+	}
+
+	// item 2
+	if ($rpi_options['Activate_item2']== true) {
+		$label2 =  $rpi_options['item2_label'] ;
+		echo "<p>" ;
+		printf ( __( $label2.' : ', 'bbpress' ));
+		echo esc_attr( bbp_get_displayed_user_field( 'rpi_label2' )); 
+		echo"</p>" ;
+	}
+
+	// item 3
+	if ($rpi_options['Activate_item3']== true) {
+		$label3 =  $rpi_options['item3_label'] ;
+		echo "<p>" ;
+		printf ( __( $label3.' : ', 'bbpress' ));
+		echo esc_attr( bbp_get_displayed_user_field( 'rpi_label3' )); 
+		echo"</p>" ;
+	}
+
+	// item 4
+	if ($rpi_options['Activate_item4']== true) {
+		$label4 =  $rpi_options['item4_label'] ;
+		echo "<p>" ;
+		printf ( __( $label4.' : ', 'bbpress' ));
+		echo esc_attr( bbp_get_displayed_user_field( 'rpi_label4' )); 
+		echo"</p>" ;
+	}
+
+	echo '<p>';
+	printf ( 'Vorname: %s', bbp_get_displayed_user_field( 'first_name') );
+	echo "</p><p>";
+	printf ( 'Name: %s', bbp_get_displayed_user_field( 'last_name') );
+	echo "</p>";
+	echo "<p>";
+	printf ( 'E-Mail: ' );
+	echo esc_attr( bbp_get_displayed_user_field( 'user_email' ));
+	echo "</p>" ;
+}
 
