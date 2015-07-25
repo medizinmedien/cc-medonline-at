@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           1.2
+Version:           1.3
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -454,4 +454,27 @@ function cc_medonline_user_profile_bbp_profile_information() {
 	echo esc_attr( bbp_get_displayed_user_field( 'user_email' ));
 	echo "</p>" ;
 }
+
+
+/**
+ * Check required files and include helper script to perform static page caching.
+ */
+$static_cache_helper = WP_PLUGIN_DIR . '/Shared-Includes/inc/auth-cache/medonline-at-transients.php';
+if( file_exists( $static_cache_helper ) ) {
+	require_once( $static_cache_helper );
+}
+
+/**
+ * Let cached public pages be delivered faster.
+ */
+function cc_medonline_mark_public_pages_for_auth_cache() {
+	if( function_exists( 'is_medonline_public_page' ) && is_medonline_public_page() ) {
+		// Signal for auth-cache to skip db query.
+		add_action( 'wp_head', function(){
+			?><meta name='auth-cache' content='public' />
+			<?php
+		}, -10 );
+	}
+}
+add_action( 'template_redirect', 'cc_medonline_mark_public_pages_for_auth_cache' );
 
