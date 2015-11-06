@@ -1,5 +1,8 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+#### Version 1.5 // 06.11.2015
+* Fix: E-Mail-Adresse auf Profilseiten nur Admins und dem Mail-Besitzer anzeigen
+
 #### Version 0.9 // 28.10.2014
 
 * Weitere Ausnahmen für die Anzeige von Thumbs Rating bei bestimmten Kategorien: keine Anzeige bei "Feeds", "Jobs" und "pubmed", sowie deren Unter-Kategorien.

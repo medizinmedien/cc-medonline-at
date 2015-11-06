@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           1.4
+Version:           1.5
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -411,7 +411,7 @@ function cc_medonline_user_profile_bbp_profile_information() {
 	// item 1
 	if ($rpi_options['Activate_item1']== true) {
 		$label1 =  $rpi_options['item1_label'] ;
-		echo "<p>" ;
+		echo "<!-- cc-medonline-at BEGIN --><p>" ;
 		printf ( __( $label1.' : ', 'bbpress' ));
 		echo esc_attr( bbp_get_displayed_user_field( 'rpi_label1' )); 
 		echo"</p>" ;
@@ -449,10 +449,12 @@ function cc_medonline_user_profile_bbp_profile_information() {
 	echo "</p><p>";
 	printf ( 'Name: %s', bbp_get_displayed_user_field( 'last_name') );
 	echo "</p>";
-	echo "<p>";
-	printf ( 'E-Mail: ' );
-	echo esc_attr( bbp_get_displayed_user_field( 'user_email' ));
-	echo "</p>" ;
+	if ( current_user_can( 'edit_users' ) || wp_get_current_user()->user_email == bbp_get_displayed_user_field( 'user_email' ) ) {
+		echo "<p>";
+		echo "E-Mail: ";
+		echo esc_attr( bbp_get_displayed_user_field( 'user_email' ) );
+		echo "</p><!-- cc-medonline-at END -->" ;
+	}
 }
 
 
