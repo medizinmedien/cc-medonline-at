@@ -1,5 +1,8 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+### Version 1.6 // 16.12.2015
+* Move Stetic script embedding into plugin "Shared Plugins".
+
 #### Version 1.5 // 06.11.2015
 * Fix: E-Mail-Adresse auf Profilseiten nur Admins und dem Mail-Besitzer anzeigen
 

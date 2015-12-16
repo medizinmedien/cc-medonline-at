@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           1.5
+Version:           1.6
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -480,10 +480,3 @@ function cc_medonline_mark_public_pages_for_auth_cache() {
 }
 add_action( 'template_redirect', 'cc_medonline_mark_public_pages_for_auth_cache' );
 
-/**
- * Stetic.
- */
-$stetic_include = WP_PLUGIN_DIR . '/Shared-Includes/inc/track/stetic.php';
-if( file_exists( $stetic_include ) ) {
-	require_once( $stetic_include );
-}
