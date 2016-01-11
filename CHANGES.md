@@ -1,5 +1,8 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+### Version 1.7 // 11.01.2016
+* Clicky tracking entfernt (eingefuehrt v0.4 bis v0.6).
+
 ### Version 1.6 // 16.12.2015
 * Move Stetic script embedding into plugin "Shared Plugins".
 
