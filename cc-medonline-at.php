@@ -3,7 +3,7 @@
 Plugin Name:       Custom Code for medonline.at
 Plugin URI:        https://github.com/medizinmedien/cc-medonline-at
 Description:       A plugin to provide functionality specific for medONLINE.
-Version:           1.7
+Version:           1.8
 Author:            Frank St&uuml;rzebecher
 GitHub Plugin URI: https://github.com/medizinmedien/cc-medonline-at
 */
@@ -418,4 +418,47 @@ function cc_medonline_mark_public_pages_for_auth_cache() {
 	}
 }
 add_action( 'template_redirect', 'cc_medonline_mark_public_pages_for_auth_cache' );
+
+
+/**
+ * Custom CSS for plugin "WF Cookie Consent", which does not contain
+ * hooks for tasks like this.
+ */
+add_action( 'plugins_loaded', 'cc_medonline_add_cookieconsent_css' );
+function cc_medonline_add_cookieconsent_css() {
+
+	// Do nothing when "WF Cookie Consent" is not loaded.
+	if ( ! function_exists( 'wf_cookieconsent_load' ) )
+		return;
+
+	add_action( 'wp_head', 'cookieconsent_custom_css' );
+	function cookieconsent_custom_css() {
+		?>
+		<style type="text/css" id="cc-medonline-at-cookieconsent-custom-css">
+			#cookieChoiceDismiss {
+				margin: 5px 24px;
+				-webkit-border-radius: 5;
+				-moz-border-radius: 5;
+				border-radius: 5px;
+				color: #000000;
+				background: #ffec20;
+				padding: 5px 10px 5px 10px;
+				text-decoration: none;
+				display: inline-block;
+				font-weight: 100;
+			}
+			#cookieChoiceDismiss:hover {
+				background: #e6d300;
+			}
+			#cookieChoiceInfo {
+				background-color: rgba(0, 0, 0, 1) !important;
+				color: #ffffff;
+			}
+			#cookieChoiceInfo a[href="https://medonline.at/cookies/"] {
+				text-decoration: underline;
+			}
+		</style>
+		<?php
+	}
+}
 

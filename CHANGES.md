@@ -1,5 +1,8 @@
 ### Änderungsprotokoll: Custom Code for medonline.at
 
+### Version 1.8 // 07.06.2016
+* Load custom inline CSS for Plugin "WF Cookie Consent" when it is active.
+
 ### Version 1.7 // 11.01.2016
 * Clicky tracking entfernt (eingefuehrt v0.4 bis v0.6).
 
